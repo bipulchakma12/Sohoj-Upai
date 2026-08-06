@@ -2,20 +2,27 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import apiClient from "@/lib/axios";
 import { CategoryCard } from "@/components/customer/CategoryCard";
 import { FloatingCallButton } from "@/components/customer/FloatingCallButton";
 import { BookingFormModal } from "@/components/customer/BookingFormModal";
 import { CustomerHeader } from "@/components/customer/CustomerHeader";
 import { RecentBookingsSection } from "@/components/customer/RecentBookingsSection";
+import { PhoneSearchModal } from "@/components/customer/PhoneSearchModal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ShieldCheck, Clock, CheckCircle2, Search, Wrench } from "lucide-react";
+import { IBooking } from "@/types";
+import { ShieldCheck, Clock, CheckCircle2, Search, Wrench, Loader2 } from "lucide-react";
 
 export default function CustomerLandingPage() {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("Electrical");
   const [searchBookingId, setSearchBookingId] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchResults, setSearchResults] = useState<IBooking[]>([]);
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+  const [searchPhoneTerm, setSearchPhoneTerm] = useState("");
 
   const handleCategoryClick = (categoryTitle: string) => {
     if (categoryTitle.includes("ইলেকট্রিক") || categoryTitle.includes("Electrical")) {
@@ -30,10 +37,45 @@ export default function CustomerLandingPage() {
     setIsModalOpen(true);
   };
 
-  const handleTrackSearch = (e: React.FormEvent) => {
+  const handleTrackSearch = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchBookingId.trim()) {
-      router.push(`/track/${searchBookingId.trim()}`);
+    const term = searchBookingId.trim();
+    if (!term) return;
+
+    // If starts with SOS- or sos-, redirect directly to tracking
+    if (term.toLowerCase().startsWith("sos-")) {
+      router.push(`/track/${term.toUpperCase()}`);
+      return;
+    }
+
+    // Otherwise, search by phone number or keyword
+    setIsSearching(true);
+    try {
+      const res = await apiClient.get(`/api/bookings?phone=${encodeURIComponent(term)}`);
+      if (res.data.success) {
+        const foundBookings: IBooking[] = res.data.bookings || [];
+        setSearchResults(foundBookings);
+        setSearchPhoneTerm(term);
+        setIsSearchModalOpen(true);
+
+        // Auto save found booking IDs to local myBookings list
+        if (foundBookings.length > 0) {
+          try {
+            const existing = JSON.parse(localStorage.getItem("myBookings") || "[]");
+            const newIds = foundBookings.map((b) => b.bookingId).filter(Boolean);
+            const updated = Array.from(new Set([...newIds, ...existing]));
+            localStorage.setItem("myBookings", JSON.stringify(updated));
+          } catch (saveErr) {
+            console.error(saveErr);
+          }
+        }
+      }
+    } catch (err) {
+      console.error("Search error:", err);
+      // Fallback redirect if error
+      router.push(`/track/${term}`);
+    } finally {
+      setIsSearching(false);
     }
   };
 
@@ -58,20 +100,20 @@ export default function CustomerLandingPage() {
             ইলেকট্রিক, প্লাম্বিং বা এসি সমস্যার দ্রুততম জরুরি সমাধান। যেকোনো সময়ে ১ ক্লিকে অভিজ্ঞ কারিগর বুকিং করুন।
           </p>
 
-          {/* Quick Track Input Bar */}
-          <div className="mt-8 max-w-md mx-auto">
+          {/* Flexible Track & Phone Search Input Bar */}
+          <div className="mt-8 max-w-lg mx-auto">
             <form onSubmit={handleTrackSearch} className="flex items-center gap-2 bg-white/10 p-2 rounded-2xl backdrop-blur-lg border border-white/20">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/60" />
                 <Input
                   value={searchBookingId}
                   onChange={(e) => setSearchBookingId(e.target.value)}
-                  placeholder="বুকিং ট্র্যাক করুন (যেমন: SOS-1001)"
-                  className="pl-9 bg-white text-gray-900 placeholder:text-gray-400 border-none shadow-sm rounded-xl"
+                  placeholder="ফোন নম্বর বা বুকিং আইডি (যেমন: 01630291849 বা SOS-1001)"
+                  className="pl-9 bg-white text-gray-900 placeholder:text-gray-400 border-none shadow-sm rounded-xl text-xs sm:text-sm"
                 />
               </div>
-              <Button type="submit" className="bg-amber-400 text-gray-900 hover:bg-amber-300 font-bold rounded-xl px-5">
-                ট্র্যাক
+              <Button type="submit" disabled={isSearching} className="bg-amber-400 text-gray-900 hover:bg-amber-300 font-bold rounded-xl px-5">
+                {isSearching ? <Loader2 className="w-4 h-4 animate-spin" /> : "খুঁজুন"}
               </Button>
             </form>
           </div>
@@ -155,6 +197,12 @@ export default function CustomerLandingPage() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         prefilledCategory={selectedCategory}
+      />
+      <PhoneSearchModal
+        isOpen={isSearchModalOpen}
+        onClose={() => setIsSearchModalOpen(false)}
+        phone={searchPhoneTerm}
+        bookings={searchResults}
       />
       <FloatingCallButton />
     </div>

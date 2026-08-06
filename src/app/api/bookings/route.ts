@@ -154,13 +154,41 @@ export async function GET(req: NextRequest) {
 
     const { searchParams } = new URL(req.url);
     const status = searchParams.get("status");
+    const phoneParam = searchParams.get("phone");
+    const searchParam = searchParams.get("search");
 
-    const query: Record<string, any> = {};
+    const queryConditions: any[] = [];
+
     if (status) {
-      query.status = status;
+      queryConditions.push({ status });
     }
 
-    const bookings = await Booking.find(query)
+    // Handle Phone or Search Query
+    const searchTerm = phoneParam || searchParam;
+    if (searchTerm) {
+      const cleanTerm = searchTerm.trim();
+
+      // Check if user exists with this phone
+      const matchingUsers = await User.find({
+        $or: [
+          { phone: cleanTerm },
+          { phone: { $regex: cleanTerm, $options: "i" } },
+        ],
+      }).select("_id");
+
+      const userIds = matchingUsers.map((u) => u._id);
+
+      queryConditions.push({
+        $or: [
+          { bookingId: { $regex: cleanTerm, $options: "i" } },
+          { user: { $in: userIds } },
+        ],
+      });
+    }
+
+    const finalQuery = queryConditions.length > 0 ? { $and: queryConditions } : {};
+
+    const bookings = await Booking.find(finalQuery)
       .populate("user", "name phone address role")
       .populate("assignedTechnician", "name phone category area rating profileImage")
       .sort({ createdAt: -1 });
