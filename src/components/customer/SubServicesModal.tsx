@@ -1,10 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Dialog, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Star, ShieldCheck, ArrowRight, Wrench, Snowflake, Tv, Sparkles, Scissors, Truck, HeartPulse, Zap } from "lucide-react";
+import { Star, ShieldCheck, ArrowRight, LayoutGrid } from "lucide-react";
 
 interface SubServiceItem {
   id: string;
@@ -213,12 +213,20 @@ export const SubServicesModal: React.FC<SubServicesModalProps> = ({
   categoryTitle,
   onSelectSubService,
 }) => {
-  // Find matching sub-services list, or fallback to default
-  const matchedKey = Object.keys(subServicesData).find(
-    (k) => k.toLowerCase() === categoryTitle.toLowerCase() || categoryTitle.toLowerCase().includes(k.toLowerCase())
-  );
+  const isAllServices = categoryTitle.toLowerCase().includes("all");
 
-  const items = matchedKey ? subServicesData[matchedKey] : subServicesData["Appliance Repair"];
+  const [activeTab, setActiveTab] = useState<string>("Appliance Repair");
+
+  // Determine categories to render
+  const categoriesList = Object.keys(subServicesData);
+
+  const activeItems = isAllServices
+    ? subServicesData[activeTab] || subServicesData["Appliance Repair"]
+    : subServicesData[
+        categoriesList.find(
+          (k) => k.toLowerCase() === categoryTitle.toLowerCase() || categoryTitle.toLowerCase().includes(k.toLowerCase())
+        ) || "Appliance Repair"
+      ];
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -226,15 +234,40 @@ export const SubServicesModal: React.FC<SubServicesModalProps> = ({
         <DialogHeader>
           <DialogTitle className="text-xl font-extrabold text-gray-900 flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-brand animate-ping" />
-            {categoryTitle} - এর সকল সেবাসমূহ
+            {isAllServices ? "সকল সার্ভিসসমূহের তালিকা (All Services)" : `${categoryTitle} - এর সকল সেবাসমূহ`}
           </DialogTitle>
           <DialogDescription className="text-slate-500 text-xs">
-            আপনার কাঙ্ক্ষিত সার্ভিসটি সিলেক্ট করে বুকিং ফর্মে যান
+            {isAllServices
+              ? "নিচের ক্যাটাগরিগুলো থেকে বেছে নিন এবং সরাসরি ১-ক্লিকে সার্ভিস বুক দিন"
+              : "আপনার কাঙ্ক্ষিত সার্ভিসটি সিলেক্ট করে বুকিং ফর্মে যান"}
           </DialogDescription>
         </DialogHeader>
 
+        {/* If All Services was selected, show quick category filter tabs */}
+        {isAllServices && (
+          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
+            {categoriesList.map((catKey) => {
+              const isActive = catKey === activeTab;
+              return (
+                <button
+                  key={catKey}
+                  type="button"
+                  onClick={() => setActiveTab(catKey)}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
+                    isActive
+                      ? "bg-brand text-white shadow-md shadow-brand/20"
+                      : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                  }`}
+                >
+                  {catKey}
+                </button>
+              );
+            })}
+          </div>
+        )}
+
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 py-2">
-          {items.map((sub) => (
+          {activeItems.map((sub) => (
             <div
               key={sub.id}
               onClick={() => {

@@ -2,6 +2,7 @@
 
 import React, { useRef } from "react";
 import {
+  LayoutGrid,
   Snowflake,
   Tv,
   Sparkles,
@@ -21,6 +22,12 @@ export const ShebaQuickNavSlider: React.FC<ShebaQuickNavSliderProps> = ({ onSele
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const quickNavItems = [
+    {
+      id: "all-services",
+      title: "All Services",
+      icon: <LayoutGrid className="w-7 h-7 text-brand" />,
+      isHighlight: true,
+    },
     {
       id: "ac",
       title: "AC Repair Services",
@@ -87,12 +94,26 @@ export const ShebaQuickNavSlider: React.FC<ShebaQuickNavSliderProps> = ({ onSele
               key={item.id}
               type="button"
               onClick={() => onSelectCategory(item.title)}
-              className="flex flex-col items-center justify-center gap-3 p-3 rounded-2xl min-w-[120px] sm:min-w-[140px] hover:bg-slate-50 border border-transparent hover:border-slate-200/80 transition-all cursor-pointer group/item shrink-0"
+              className={`flex flex-col items-center justify-center gap-3 p-3 rounded-2xl min-w-[120px] sm:min-w-[140px] border transition-all cursor-pointer group/item shrink-0 ${
+                item.isHighlight
+                  ? "bg-brand/5 border-brand/30 hover:bg-brand/10 hover:border-brand"
+                  : "hover:bg-slate-50 border-transparent hover:border-slate-200/80"
+              }`}
             >
-              <div className="w-12 h-12 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center group-hover/item:scale-110 group-hover/item:bg-white group-hover/item:shadow-md transition-all">
-                {item.icon}
+              <div
+                className={`w-12 h-12 rounded-2xl border flex items-center justify-center group-hover/item:scale-110 transition-all ${
+                  item.isHighlight
+                    ? "bg-brand text-white border-brand shadow-md shadow-brand/20"
+                    : "bg-slate-50 border-slate-100 group-hover/item:bg-white group-hover/item:shadow-md"
+                }`}
+              >
+                {item.isHighlight ? <LayoutGrid className="w-6 h-6 text-white" /> : item.icon}
               </div>
-              <span className="text-xs font-extrabold text-slate-800 group-hover/item:text-brand transition-colors text-center leading-snug">
+              <span
+                className={`text-xs font-black text-center leading-snug transition-colors ${
+                  item.isHighlight ? "text-brand" : "text-slate-800 group-hover/item:text-brand"
+                }`}
+              >
                 {item.title}
               </span>
             </button>
