@@ -7,8 +7,8 @@ import { FloatingCallButton } from "@/components/customer/FloatingCallButton";
 import { BookingFormModal } from "@/components/customer/BookingFormModal";
 import { CustomerHeader } from "@/components/customer/CustomerHeader";
 import { RecentBookingsSection } from "@/components/customer/RecentBookingsSection";
-import { ShebaMegaServices } from "@/components/customer/ShebaMegaServices";
 import { ShebaQuickNavSlider } from "@/components/customer/ShebaQuickNavSlider";
+import { SubServicesModal } from "@/components/customer/SubServicesModal";
 import { PhoneSearchModal } from "@/components/customer/PhoneSearchModal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,7 +28,7 @@ import {
 
 export default function CustomerLandingPage() {
   const router = useRouter();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("Electrical");
   const [searchBookingId, setSearchBookingId] = useState("");
   const [selectedLocation, setSelectedLocation] = useState("Uttara");
@@ -37,11 +37,20 @@ export default function CustomerLandingPage() {
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const [searchPhoneTerm, setSearchPhoneTerm] = useState("");
 
+  // Sub-services modal state
+  const [isSubServicesModalOpen, setIsSubServicesModalOpen] = useState(false);
+  const [selectedSliderCategory, setSelectedSliderCategory] = useState("Appliance Repair");
+
   const phoneNumber = "01630291849";
 
-  const handleCategoryClick = (categoryTitle: string) => {
-    setSelectedCategory(categoryTitle);
-    setIsModalOpen(true);
+  const handleSliderCategoryClick = (categoryTitle: string) => {
+    setSelectedSliderCategory(categoryTitle);
+    setIsSubServicesModalOpen(true);
+  };
+
+  const handleSubServiceSelected = (subServiceName: string) => {
+    setSelectedCategory(subServiceName);
+    setIsBookingModalOpen(true);
   };
 
   const handleTrackSearch = async (e: React.FormEvent) => {
@@ -169,17 +178,14 @@ export default function CustomerLandingPage() {
         </div>
       </section>
 
-      {/* Floating Sheba Quick Category Slider (Matching User Screenshot) */}
-      <ShebaQuickNavSlider onSelectCategory={handleCategoryClick} />
-
-      {/* Sheba.xyz Full Services Category Mega Explorer Component */}
-      <ShebaMegaServices onSelectService={handleCategoryClick} />
+      {/* Floating Sheba Quick Category Slider */}
+      <ShebaQuickNavSlider onSelectCategory={handleSliderCategoryClick} />
 
       {/* Customer's Recent Active Bookings Section */}
       <RecentBookingsSection />
 
       {/* "How Sohoj Upai Works" Sheba Style */}
-      <section className="bg-white py-16 border-y border-slate-200/80 mb-16">
+      <section className="bg-white py-16 border-y border-slate-200/80 mb-16 mt-8">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center max-w-2xl mx-auto mb-12 space-y-2">
             <span className="text-brand font-extrabold text-xs uppercase tracking-wider bg-brand/10 px-3 py-1 rounded-full">
@@ -379,9 +385,15 @@ export default function CustomerLandingPage() {
       </footer>
 
       {/* Modals & Floating Buttons */}
+      <SubServicesModal
+        isOpen={isSubServicesModalOpen}
+        onClose={() => setIsSubServicesModalOpen(false)}
+        categoryTitle={selectedSliderCategory}
+        onSelectSubService={handleSubServiceSelected}
+      />
       <BookingFormModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        isOpen={isBookingModalOpen}
+        onClose={() => setIsBookingModalOpen(false)}
         prefilledCategory={selectedCategory}
       />
       <PhoneSearchModal
