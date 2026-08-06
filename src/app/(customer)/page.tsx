@@ -8,6 +8,7 @@ import { FloatingCallButton } from "@/components/customer/FloatingCallButton";
 import { BookingFormModal } from "@/components/customer/BookingFormModal";
 import { CustomerHeader } from "@/components/customer/CustomerHeader";
 import { RecentBookingsSection } from "@/components/customer/RecentBookingsSection";
+import { ShebaMegaServices } from "@/components/customer/ShebaMegaServices";
 import { PhoneSearchModal } from "@/components/customer/PhoneSearchModal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,14 +21,9 @@ import {
   Wrench,
   Loader2,
   Star,
-  Zap,
-  Sparkles,
-  Truck,
-  Tv,
   MapPin,
   PhoneCall,
   MessageCircle,
-  ThumbsUp,
   Award,
   Users,
 } from "lucide-react";
@@ -46,21 +42,7 @@ export default function CustomerLandingPage() {
   const phoneNumber = "01630291849";
 
   const handleCategoryClick = (categoryTitle: string) => {
-    if (categoryTitle.includes("ইলেকট্রিক") || categoryTitle.includes("Electrical")) {
-      setSelectedCategory("Electrical");
-    } else if (categoryTitle.includes("প্লাম্বিং") || categoryTitle.includes("Plumbing")) {
-      setSelectedCategory("Plumbing");
-    } else if (categoryTitle.includes("এসি") || categoryTitle.includes("AC Repair")) {
-      setSelectedCategory("AC Repair");
-    } else if (categoryTitle.includes("ক্লিনিং") || categoryTitle.includes("Cleaning")) {
-      setSelectedCategory("Cleaning");
-    } else if (categoryTitle.includes("শিফটিং") || categoryTitle.includes("Shifting")) {
-      setSelectedCategory("House Shifting");
-    } else if (categoryTitle.includes("অ্যাপ্লায়েন্স") || categoryTitle.includes("Appliance")) {
-      setSelectedCategory("Appliance Repair");
-    } else {
-      setSelectedCategory(categoryTitle);
-    }
+    setSelectedCategory(categoryTitle);
     setIsModalOpen(true);
   };
 
@@ -122,7 +104,7 @@ export default function CustomerLandingPage() {
           </h1>
 
           <p className="text-sm sm:text-lg text-slate-300 max-w-2xl mx-auto font-medium">
-            ইলেকট্রিক, প্লাম্বিং, এসি রিপেয়ার বা হোম ক্লিনিং সমস্যার দ্রুততম জরুরি সমাধান।
+            ইলেকট্রিক, প্লাম্বিং, এসি রিপেয়ার, হোম ক্লিনিং বা অ্যাপ্লায়েন্স সমাধানের দ্রুততম মাধ্যম।
           </p>
 
           {/* Sheba Combined Location + Service Search Bar */}
@@ -189,19 +171,13 @@ export default function CustomerLandingPage() {
         </div>
       </section>
 
-      {/* Services Grid Sheba Style */}
-      <section className="max-w-6xl mx-auto px-4 -mt-8 relative z-20 w-full mb-12">
-        <div className="text-center mb-6">
-          <span className="bg-brand/10 text-brand text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">
-            আমাদের সেবাসমূহ (Our Services)
-          </span>
-        </div>
-
+      {/* Top 6 Popular Services Grid */}
+      <section className="max-w-6xl mx-auto px-4 -mt-8 relative z-20 w-full mb-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <CategoryCard
             id="cat-electrical"
             title="⚡ ইলেকট্রিক সার্ভিস"
-            description="মেইন সুইচ বোর্ডে সমস্যা, শর্ট সার্কিট, ফিউজ মেরামত, আইপিএস লাইন বা ওয়ারিং সমাধান।"
+            description="মেইন সুইচ বোর্ডে সমস্যা, শর্ট সার্কিট, ফিউজ মেরামত, আইপিএস লাইন বা ওয়্যারিং সমাধান।"
             iconName="electrical"
             startingPrice="৳৪৯৯"
             rating="4.9"
@@ -232,6 +208,17 @@ export default function CustomerLandingPage() {
           />
 
           <CategoryCard
+            id="cat-appliance"
+            title="🛠️ অ্যাপ্লায়েন্স মেরামত"
+            description="রেফ্রিজারেটর, ওভেন, ওয়াশিং মেশিন বা টিভি হোম সার্ভিসিং ও পার্টস রিপ্লেসমেন্ট।"
+            iconName="appliance"
+            startingPrice="৳৫৯৯"
+            rating="4.9"
+            reviewsCount="1.1k"
+            onClick={handleCategoryClick}
+          />
+
+          <CategoryCard
             id="cat-cleaning"
             title="🧹 হোম ক্লিনিং"
             description="বাসা-বাড়ি ডিপ ক্লিনিং, ওয়াশরুম ক্লিনিং, সোফা ও কার্পেট ওয়াশ সার্ভিস।"
@@ -252,19 +239,11 @@ export default function CustomerLandingPage() {
             reviewsCount="720+"
             onClick={handleCategoryClick}
           />
-
-          <CategoryCard
-            id="cat-appliance"
-            title="🛠️ অ্যাপ্লায়েন্স মেরামত"
-            description="রেফ্রিজারেটর, ওভেন, ওয়াশিং মেশিন বা টিভি হোম সার্ভিসিং ও পার্টস রিপ্লেসমেন্ট।"
-            iconName="appliance"
-            startingPrice="৳৫৯৯"
-            rating="4.9"
-            reviewsCount="1.1k"
-            onClick={handleCategoryClick}
-          />
         </div>
       </section>
+
+      {/* Sheba.xyz Full Services Category Mega Explorer Component */}
+      <ShebaMegaServices onSelectService={handleCategoryClick} />
 
       {/* Customer's Recent Active Bookings Section */}
       <RecentBookingsSection />
@@ -411,7 +390,7 @@ export default function CustomerLandingPage() {
                 <span className="font-black text-white text-base">সহজ উপায়</span>
               </div>
               <p className="text-slate-400 leading-relaxed">
-                বাংলাদেশের জরুরি হোম সার্ভিস প্ল্যাটফর্ম। ইলেকট্রিক, প্লাম্বিং, এসি রিপেয়ার ও ক্লিনিং সার্ভিসের নির্ভরযোগ্য সমাধান।
+                বাংলাদেশের ১ নম্বর নির্ভরযোগ্য হোম সার্ভিস প্ল্যাটফর্ম। ইলেকট্রিক, প্লাম্বিং, এসি রিপেয়ার ও ক্লিনিং সার্ভিসের বিশ্বস্ত সমাধান।
               </p>
             </div>
 
@@ -432,7 +411,7 @@ export default function CustomerLandingPage() {
             <div className="space-y-2">
               <h4 className="font-bold text-white text-sm">জনপ্রিয় সার্ভিসসমূহ</h4>
               <ul className="space-y-1 text-slate-400">
-                <li>⚡ ইলেকট্রিক ফিউজ ও ওয়্যারিং</li>
+                <li>⚡ ইলেকট্রিক ফিউজ ও ওয়ারিং</li>
                 <li>🚰 প্লাম্বিং ও পাইপ লিকিং</li>
                 <li>❄️ এসি সার্ভিসিং ও গ্যাস রিফিল</li>
                 <li>🧹 হোম ও ওয়াশরুম ডিপ ক্লিনিং</li>
