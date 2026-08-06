@@ -9,6 +9,7 @@ import { BookingFormModal } from "@/components/customer/BookingFormModal";
 import { CustomerHeader } from "@/components/customer/CustomerHeader";
 import { RecentBookingsSection } from "@/components/customer/RecentBookingsSection";
 import { ShebaMegaServices } from "@/components/customer/ShebaMegaServices";
+import { ShebaQuickNavSlider } from "@/components/customer/ShebaQuickNavSlider";
 import { PhoneSearchModal } from "@/components/customer/PhoneSearchModal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -90,7 +91,7 @@ export default function CustomerLandingPage() {
       <CustomerHeader />
 
       {/* Hero Section Sheba Style */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-brand-900 py-16 sm:py-20 px-4 text-white">
+      <section className="relative overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-brand-900 pt-16 sm:pt-20 pb-24 px-4 text-white">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(225,29,72,0.25),transparent_60%)]" />
 
         <div className="relative max-w-5xl mx-auto text-center space-y-6">
@@ -171,8 +172,11 @@ export default function CustomerLandingPage() {
         </div>
       </section>
 
+      {/* Floating Sheba Quick Category Slider (Matching User Screenshot) */}
+      <ShebaQuickNavSlider onSelectCategory={handleCategoryClick} />
+
       {/* Top 6 Popular Services Grid */}
-      <section className="max-w-6xl mx-auto px-4 -mt-8 relative z-20 w-full mb-8">
+      <section className="max-w-6xl mx-auto px-4 mt-12 mb-8 relative z-20 w-full">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <CategoryCard
             id="cat-electrical"
