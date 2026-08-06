@@ -4,7 +4,7 @@ import React from "react";
 import { Phone, MessageCircle } from "lucide-react";
 
 export const FloatingCallButton: React.FC = () => {
-  const phoneNumber = "01700000000";
+  const phoneNumber = "01630291849";
 
   return (
     <div className="fixed bottom-6 right-6 z-40 flex flex-col gap-3">
