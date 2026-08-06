@@ -12,14 +12,16 @@ import { Clock, MapPin, ArrowRight, RefreshCw, CheckCircle2, UserCheck, Truck, S
 export const RecentBookingsSection: React.FC = () => {
   const [bookings, setBookings] = useState<IBooking[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
 
   const fetchRecentBookings = async () => {
-    setIsLoading(true);
+    setIsRefreshing(true);
     try {
       const storedIdsRaw = localStorage.getItem("myBookings");
       if (!storedIdsRaw) {
         setBookings([]);
         setIsLoading(false);
+        setIsRefreshing(false);
         return;
       }
 
@@ -27,6 +29,7 @@ export const RecentBookingsSection: React.FC = () => {
       if (!Array.isArray(bookingIds) || bookingIds.length === 0) {
         setBookings([]);
         setIsLoading(false);
+        setIsRefreshing(false);
         return;
       }
 
@@ -48,6 +51,7 @@ export const RecentBookingsSection: React.FC = () => {
       console.error("Error loading recent bookings:", err);
     } finally {
       setIsLoading(false);
+      setIsRefreshing(false);
     }
   };
 
@@ -108,9 +112,10 @@ export const RecentBookingsSection: React.FC = () => {
   return (
     <div className="w-full max-w-5xl mx-auto px-4 my-8">
       <div className="bg-white rounded-2xl p-6 shadow-xl border border-brand/20 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-brand/5 rounded-full blur-2xl -mr-10 -mt-10" />
+        {/* Decorative Circle with pointer-events-none so it never blocks clicks */}
+        <div className="pointer-events-none absolute top-0 right-0 w-32 h-32 bg-brand/5 rounded-full blur-2xl -mr-10 -mt-10" />
 
-        <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-100">
+        <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-100 relative z-10">
           <div>
             <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-brand animate-ping" />
@@ -122,17 +127,19 @@ export const RecentBookingsSection: React.FC = () => {
           </div>
 
           <Button
-            variant="ghost"
+            type="button"
+            variant="outline"
             size="sm"
             onClick={fetchRecentBookings}
-            className="text-xs text-gray-500 hover:text-brand gap-1"
+            disabled={isRefreshing}
+            className="relative z-10 text-xs font-semibold text-gray-700 hover:text-brand hover:bg-slate-50 border-gray-200 shadow-sm gap-1.5 px-3 py-1.5 cursor-pointer shrink-0"
           >
-            <RefreshCw className="w-3.5 h-3.5" />
-            রিফ্রেশ
+            <RefreshCw className={`w-3.5 h-3.5 text-brand ${isRefreshing ? "animate-spin" : ""}`} />
+            <span>রিফ্রেশ</span>
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10">
           {bookings.map((b) => (
             <Card
               key={b.bookingId || (b._id as string)}
