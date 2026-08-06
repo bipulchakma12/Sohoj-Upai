@@ -115,7 +115,7 @@ export const RecentBookingsSection: React.FC = () => {
         {/* Decorative Circle with pointer-events-none so it never blocks clicks */}
         <div className="pointer-events-none absolute top-0 right-0 w-32 h-32 bg-brand/5 rounded-full blur-2xl -mr-10 -mt-10" />
 
-        <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-100 relative z-10">
+        <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-100 relative z-20">
           <div>
             <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-brand animate-ping" />
@@ -126,17 +126,15 @@ export const RecentBookingsSection: React.FC = () => {
             </p>
           </div>
 
-          <Button
+          <button
             type="button"
-            variant="outline"
-            size="sm"
             onClick={fetchRecentBookings}
             disabled={isRefreshing}
-            className="relative z-10 text-xs font-semibold text-gray-700 hover:text-brand hover:bg-slate-50 border-gray-200 shadow-sm gap-1.5 px-3 py-1.5 cursor-pointer shrink-0"
+            className="relative z-50 cursor-pointer select-none border border-slate-300 hover:border-brand bg-white hover:bg-brand/10 text-slate-800 hover:text-brand font-bold text-xs rounded-xl px-4 py-2 inline-flex items-center gap-2 shadow-sm active:scale-95 transition-all shrink-0"
           >
-            <RefreshCw className={`w-3.5 h-3.5 text-brand ${isRefreshing ? "animate-spin" : ""}`} />
-            <span>রিফ্রেশ</span>
-          </Button>
+            <RefreshCw className={`w-4 h-4 text-brand pointer-events-none ${isRefreshing ? "animate-spin" : ""}`} />
+            <span className="pointer-events-none select-none">রিফ্রেশ</span>
+          </button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10">
