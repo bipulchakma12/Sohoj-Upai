@@ -96,6 +96,16 @@ export const BookingFormModal: React.FC<BookingFormModalProps> = ({
 
       const result = await createBookingMutation.mutateAsync(bookingPayload as any);
 
+      // Save bookingId to local myBookings list
+      try {
+        const bookingId = result.booking.bookingId;
+        const existing = JSON.parse(localStorage.getItem("myBookings") || "[]");
+        const updated = Array.from(new Set([bookingId, ...existing]));
+        localStorage.setItem("myBookings", JSON.stringify(updated));
+      } catch (saveErr) {
+        console.error("Failed to save booking ID to localStorage:", saveErr);
+      }
+
       reset();
       setSelectedFile(null);
       onClose();

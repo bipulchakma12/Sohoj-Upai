@@ -6,6 +6,7 @@ import { CategoryCard } from "@/components/customer/CategoryCard";
 import { FloatingCallButton } from "@/components/customer/FloatingCallButton";
 import { BookingFormModal } from "@/components/customer/BookingFormModal";
 import { CustomerHeader } from "@/components/customer/CustomerHeader";
+import { RecentBookingsSection } from "@/components/customer/RecentBookingsSection";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ShieldCheck, Clock, CheckCircle2, Search, Wrench } from "lucide-react";
@@ -78,7 +79,7 @@ export default function CustomerLandingPage() {
       </section>
 
       {/* Category Section */}
-      <section className="max-w-6xl mx-auto px-4 -mt-8 relative z-20 w-full mb-16">
+      <section className="max-w-6xl mx-auto px-4 -mt-8 relative z-20 w-full mb-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <CategoryCard
             id="cat-electrical"
@@ -105,6 +106,9 @@ export default function CustomerLandingPage() {
           />
         </div>
       </section>
+
+      {/* Customer's Recent Active Bookings Section */}
+      <RecentBookingsSection />
 
       {/* Trust Badges */}
       <section className="bg-white py-12 border-y border-gray-100 mb-16">
