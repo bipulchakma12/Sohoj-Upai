@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Wrench, MapPin, Phone, MessageCircle, Shield, ChevronDown, UserCheck } from "lucide-react";
+import { Wrench, MapPin, Phone, MessageCircle, ChevronDown } from "lucide-react";
 
 export function CustomerHeader() {
   const [selectedCity, setSelectedCity] = useState("ঢাকা (Dhaka)");
@@ -17,19 +17,13 @@ export function CustomerHeader() {
             <span className="bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider">
               ৩০ মিনিট গ্যারান্টি
             </span>
-            <span className="hidden sm:inline text-slate-300">
+            <span className="text-slate-300">
               জরুরি প্রয়োজনে কারিগর পেতে কল করুন: <strong className="text-amber-300">{phoneNumber}</strong>
             </span>
           </div>
 
-          <div className="flex items-center gap-4">
-            <Link
-              href="/admin/login"
-              className="hover:text-amber-300 transition-colors flex items-center gap-1 font-semibold"
-            >
-              <Shield className="w-3.5 h-3.5 text-brand" />
-              <span>এডমিন লগইন</span>
-            </Link>
+          <div className="hidden sm:flex items-center gap-4 text-[11px] font-semibold text-slate-400">
+            <span>২৪/৭ কাস্টমার সাপোর্ট</span>
           </div>
         </div>
       </div>
