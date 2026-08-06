@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import apiClient from "@/lib/axios";
-import { CategoryCard } from "@/components/customer/CategoryCard";
 import { FloatingCallButton } from "@/components/customer/FloatingCallButton";
 import { BookingFormModal } from "@/components/customer/BookingFormModal";
 import { CustomerHeader } from "@/components/customer/CustomerHeader";
@@ -16,8 +15,6 @@ import { Input } from "@/components/ui/input";
 import { IBooking } from "@/types";
 import {
   ShieldCheck,
-  Clock,
-  CheckCircle2,
   Search,
   Wrench,
   Loader2,
@@ -174,77 +171,6 @@ export default function CustomerLandingPage() {
 
       {/* Floating Sheba Quick Category Slider (Matching User Screenshot) */}
       <ShebaQuickNavSlider onSelectCategory={handleCategoryClick} />
-
-      {/* Top 6 Popular Services Grid */}
-      <section className="max-w-6xl mx-auto px-4 mt-12 mb-8 relative z-20 w-full">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <CategoryCard
-            id="cat-electrical"
-            title="⚡ ইলেকট্রিক সার্ভিস"
-            description="মেইন সুইচ বোর্ডে সমস্যা, শর্ট সার্কিট, ফিউজ মেরামত, আইপিএস লাইন বা ওয়্যারিং সমাধান।"
-            iconName="electrical"
-            startingPrice="৳৪৯৯"
-            rating="4.9"
-            reviewsCount="1.8k"
-            onClick={handleCategoryClick}
-          />
-
-          <CategoryCard
-            id="cat-plumbing"
-            title="🚰 প্লাম্বিং সমাধান"
-            description="পাইপ লিক, পানির ট্যাপ মেরামত, বেসিন ব্লক, ফ্লাশ ফিক্স বা ওয়াটার পাম্প সার্ভিসিং।"
-            iconName="plumbing"
-            startingPrice="৳৩৯৯"
-            rating="4.8"
-            reviewsCount="1.4k"
-            onClick={handleCategoryClick}
-          />
-
-          <CategoryCard
-            id="cat-ac"
-            title="❄️ এসি মেকানিক"
-            description="এসি ঠান্ডা না হওয়া, গ্যাস রিফিল, মাসটার সার্ভিসিং বা লিকেজ রিপেয়ার।"
-            iconName="ac"
-            startingPrice="৳৭৯৯"
-            rating="5.0"
-            reviewsCount="2.1k"
-            onClick={handleCategoryClick}
-          />
-
-          <CategoryCard
-            id="cat-appliance"
-            title="🛠️ অ্যাপ্লায়েন্স মেরামত"
-            description="রেফ্রিজারেটর, ওভেন, ওয়াশিং মেশিন বা টিভি হোম সার্ভিসিং ও পার্টস রিপ্লেসমেন্ট।"
-            iconName="appliance"
-            startingPrice="৳৫৯৯"
-            rating="4.9"
-            reviewsCount="1.1k"
-            onClick={handleCategoryClick}
-          />
-
-          <CategoryCard
-            id="cat-cleaning"
-            title="🧹 হোম ক্লিনিং"
-            description="বাসা-বাড়ি ডিপ ক্লিনিং, ওয়াশরুম ক্লিনিং, সোফা ও কার্পেট ওয়াশ সার্ভিস।"
-            iconName="cleaning"
-            startingPrice="৳৯৯৯"
-            rating="4.9"
-            reviewsCount="950+"
-            onClick={handleCategoryClick}
-          />
-
-          <CategoryCard
-            id="cat-shifting"
-            title="📦 বাসা বদল / শিফটিং"
-            description="নিরাপদে বাসা ও অফিস শিফটিং, মালামাল প্যাকিং ও অভিজ্ঞ লেবার সাপোর্ট।"
-            iconName="shifting"
-            startingPrice="৳২,৪৯৯"
-            rating="4.8"
-            reviewsCount="720+"
-            onClick={handleCategoryClick}
-          />
-        </div>
-      </section>
 
       {/* Sheba.xyz Full Services Category Mega Explorer Component */}
       <ShebaMegaServices onSelectService={handleCategoryClick} />
